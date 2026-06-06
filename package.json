@@ -8,6 +8,9 @@
   "exports": {
     ".": "./src/index.ts"
   },
+  "scripts": {
+    "example": "tsx examples/basic.ts"
+  },
   "sideEffects": [
     "./src/mc/montecarlo.worker.ts"
   ]

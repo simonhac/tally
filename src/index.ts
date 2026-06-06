@@ -78,6 +78,7 @@ export { BUCKET_LABEL, resolveParty } from "./party-display";
 export type { ResolvedParty } from "./party-display";
 
 // --- monte carlo (React-free) ---
+export { mulberry32, gaussian } from "./mc/prng";
 export { buildMultinomialCholesky } from "./mc/cholesky";
 export { computeQuantiles } from "./mc/quantiles";
 export type { QuantileStats } from "./mc/quantiles";
