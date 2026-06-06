@@ -3,15 +3,37 @@
   "version": "0.0.0",
   "private": true,
   "description": "Framework-agnostic Australian election simulation engine: IRV, STV, swing application, demographic raking, proportional allocation, and Monte Carlo. No React, Next, or Node dependencies.",
+  "license": "UNLICENSED",
   "type": "module",
-  "main": "./src/index.ts",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "exports": {
-    ".": "./src/index.ts"
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./mc/montecarlo.worker.js": "./dist/mc/montecarlo.worker.js"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "sideEffects": [
+    "./dist/mc/montecarlo.worker.js"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/boost-suite/open-tally-room.git"
   },
   "scripts": {
-    "example": "tsx examples/basic.ts"
+    "build": "tsc -p tsconfig.build.json",
+    "clean": "rm -rf dist",
+    "example": "tsx examples/basic.ts",
+    "prepublishOnly": "npm run clean && npm run build"
   },
-  "sideEffects": [
-    "./src/mc/montecarlo.worker.ts"
-  ]
+  "devDependencies": {
+    "tsx": "^4.22.4",
+    "typescript": "^5"
+  }
 }

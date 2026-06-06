@@ -1,0 +1,13 @@
+{
+  "//": "Build config for publishing. Emits compiled JS + .d.ts to dist/. The app does NOT use this — it consumes src/ directly via the @tally path alias. Run `npm run build` before publishing (prepublishOnly does this automatically).",
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noEmit": false,
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "outDir": "./dist",
+    "rootDir": "./src"
+  },
+  "include": ["src/**/*.ts"]
+}

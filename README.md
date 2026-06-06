@@ -121,6 +121,20 @@ Everything is re-exported from the barrel ([`src/index.ts`](./src/index.ts)):
 - **Determinism.** Same seed → same Monte Carlo stream. `mulberry32` + Box-Muller
   `gaussian` are exposed so callers can reproduce or extend a run.
 
+## Building & publishing
+
+The host app consumes `src/` directly (no build needed). To produce a
+distributable package:
+
+```bash
+npm run build      # tsc → dist/ (compiled JS + .d.ts), driven by tsconfig.build.json
+```
+
+`package.json` `main`/`types`/`exports` point at `dist/`, and `files` ships
+`dist` + this README. Publishing is gated off for now (`"private": true`); when
+you're ready, set `"private": false`, pick a version, and `npm publish`
+(`prepublishOnly` rebuilds `dist/` first).
+
 ## Data shape
 
 ```ts
