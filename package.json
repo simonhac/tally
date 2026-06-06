@@ -1,0 +1,14 @@
+{
+  "name": "open-tally-room",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Framework-agnostic Australian election simulation engine: IRV, STV, swing application, demographic raking, proportional allocation, and Monte Carlo. No React, Next, or Node dependencies.",
+  "type": "module",
+  "main": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "sideEffects": [
+    "./src/mc/montecarlo.worker.ts"
+  ]
+}

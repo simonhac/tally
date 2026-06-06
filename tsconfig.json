@@ -1,0 +1,17 @@
+{
+  "//": "Standalone config for the engine. React-free / Next-free / Node-free, but NOT DOM-free — the Monte Carlo worker references Web Worker globals (self, MessageEvent, postMessage), so the dom lib is required. Consumed by the app as source via the @tally path alias; no build step today. To graduate to a published package, add an emit target and point package.json main/types at dist/.",
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "strict": true,
+    "noEmit": true,
+    "isolatedModules": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "forceConsistentCasingInFileNames": true
+  },
+  "include": ["src/**/*.ts"]
+}
