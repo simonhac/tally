@@ -1,4 +1,4 @@
-// Thin adapter over the open-tally-room engine: loads the bundled 2022
+// Thin adapter over the tally engine: loads the bundled 2022
 // dataset, exposes the consumer "fold" (Victorian party bucketing), and wraps
 // the deterministic seat projection. Everything visual builds on these.
 

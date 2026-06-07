@@ -65,7 +65,7 @@ export function renderHero(root: HTMLElement) {
       {},
       "Every primary vote and preference flow from the 2022 Victorian state " +
         "election, fed through the ",
-      h("strong", {}, "open tally room"),
+      h("strong", {}, "tally"),
       " engine. Dial a swing below and watch all 88 lower-house seats and 40 " +
         "upper-house seats re-count in real time — instant-runoff and " +
         "single-transferable-vote, exactly as the VEC ran them.",

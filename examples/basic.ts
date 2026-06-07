@@ -1,4 +1,4 @@
-// open-tally-room — worked example + smoke harness.
+// tally — worked example + smoke harness.
 //
 // Runs the full engine pipeline on the real 2022 Victorian state election
 // (bundled as ./vic-2022.json, so this example is self-contained — it does not
@@ -15,8 +15,8 @@
 // It is also a harness: every section asserts an invariant via `check()` and the
 // process exits non-zero if any fails. Run it with:
 //
-//   npx tsx open-tally-room/examples/basic.ts      # from the repo root
-//   npm run example                                # from open-tally-room/
+//   npx tsx tally/examples/basic.ts      # from the repo root
+//   npm run example                      # from tally/
 //
 // NOTE on folding: the engine counts seats under each winner's RAW party id. A
 // jurisdiction supplies its own bucketing — here `vicFold` folds the joint LNP
