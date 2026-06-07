@@ -1,8 +1,8 @@
-# open tally room — demo site
+# tally — demo site
 
 A static, single-page demo that showcases the bundled 2022 Victorian election
 dataset (`../examples/vic-2022.json`) and runs the real
-[open-tally-room](../README.md) engine live in the browser:
+[tally](../README.md) engine live in the browser:
 
 - baseline composition of both chambers (88 + 40 seats),
 - an **interactive scenario** — drag primary swings and watch IRV + STV
@@ -52,7 +52,7 @@ npm run preview    # serve the built bundle
 ```
 
 By default the production build is served from `/tally/` (GitHub Pages project
-path for `boost-suite/tally`). Override for a different repo or a custom domain:
+path for `simonhac/tally`). Override for a different repo or a custom domain:
 
 ```bash
 PAGES_BASE=/my-repo/ npm run build
@@ -65,4 +65,4 @@ Pushed automatically to GitHub Pages by
 [`.github/workflows/deploy-pages.yml`](../.github/workflows/deploy-pages.yml) on
 every push to `main` that touches `site/`, `src/`, or the dataset. One-time
 setup: in the repo, **Settings → Pages → Source → "GitHub Actions"**. The site
-then lives at `https://boost-suite.github.io/tally/`.
+then lives at `https://simonhac.github.io/tally/`.

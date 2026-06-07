@@ -66,8 +66,8 @@ export function renderAbout(root: HTMLElement) {
       "Powered by ",
       h(
         "a",
-        { href: "https://github.com/boost-suite/tally", target: "_blank", rel: "noopener" },
-        "open tally room",
+        { href: "https://github.com/simonhac/tally", target: "_blank", rel: "noopener" },
+        "tally",
       ),
       " — a zero-dependency, framework-agnostic election engine. The data and " +
         "every modelling choice are documented below.",

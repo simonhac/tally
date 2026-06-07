@@ -1,9 +1,9 @@
 {
-  "name": "open-tally-room-site",
+  "name": "tally-site",
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "description": "Static demo site for open-tally-room — interactive 2022 Victorian election projection.",
+  "description": "Static demo site for tally — interactive 2022 Victorian election projection.",
   "scripts": {
     "dev": "vite",
     "web": "tsx start-web.ts",

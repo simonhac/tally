@@ -1,7 +1,7 @@
-// open-tally-room — framework-agnostic Australian election simulation engine.
+// tally — framework-agnostic Australian election simulation engine.
 //
 // Public API surface. Import from "@tally" in the app. This barrel deliberately
-// does NOT export the Monte Carlo worker module (open-tally-room/src/mc/
+// does NOT export the Monte Carlo worker module (tally/src/mc/
 // montecarlo.worker.ts) — workers are loaded by URL via the "@tally/*" deep
 // path, not imported as values.
 

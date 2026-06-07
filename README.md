@@ -1,4 +1,4 @@
-# open-tally-room
+# tally
 
 A framework-agnostic election-simulation engine for Australian elections. It
 takes a baseline election (per-seat primary votes + preference flows) and a
@@ -19,13 +19,12 @@ takes a baseline election (per-seat primary votes + preference flows) and a
 No React, no Next.js, no Node-only APIs. Pure TypeScript with zero runtime
 dependencies — it runs in the browser (including Web Workers), Node, Deno or Bun.
 
-> Status: extracted from the *Another Brick in the Wall* project; consumed there
-> via the `@tally` path alias. Intended to graduate to its own published package.
+> Status: Intended to graduate to its own published package.
 
 ## Demo site
 
 A static, interactive demo lives in [`site/`](./site) and deploys to GitHub
-Pages at **https://boost-suite.github.io/tally/**. It runs this engine live in
+Pages at **https://simonhac.github.io/tally/**. It runs this engine live in
 the browser over the bundled 2022 Victorian dataset — swing the primaries and
 watch the seats re-count, with an optional Monte Carlo uncertainty band.
 
@@ -48,8 +47,8 @@ Today it's consumed as source via a tsconfig path alias:
 ```jsonc
 // tsconfig.json
 "paths": {
-  "@tally": ["./open-tally-room/src/index.ts"],
-  "@tally/*": ["./open-tally-room/src/*"]
+  "@tally": ["./tally/src/index.ts"],
+  "@tally/*": ["./tally/src/*"]
 }
 ```
 
@@ -94,8 +93,8 @@ never reaches into a host app). Every section asserts an invariant and the
 process exits non-zero on failure.
 
 ```bash
-npx tsx open-tally-room/examples/basic.ts   # from the repo root
-npm run example                             # from open-tally-room/
+npx tsx tally/examples/basic.ts   # from the repo root
+npm run example                   # from tally/
 ```
 
 Sample output:

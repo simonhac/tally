@@ -1,5 +1,5 @@
 {
-  "name": "open-tally-room",
+  "name": "tally",
   "version": "0.0.0",
   "private": true,
   "description": "Framework-agnostic Australian election simulation engine: IRV, STV, swing application, demographic raking, proportional allocation, and Monte Carlo. No React, Next, or Node dependencies.",
@@ -24,7 +24,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/boost-suite/open-tally-room.git"
+    "url": "git+https://github.com/simonhac/tally.git"
   },
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
