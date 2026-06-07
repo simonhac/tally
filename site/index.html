@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en-AU">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Interactive projection of the 2022 Victorian state election, powered by the open-tally-room engine. Swing the primaries and watch the seats move."
+    />
+    <title>open tally room — Victoria 2022</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23111418'/%3E%3Ccircle cx='16' cy='16' r='7' fill='%23f5b301'/%3E%3C/svg%3E" />
+  </head>
+  <body>
+    <header class="masthead">
+      <div class="wrap masthead-inner">
+        <a class="wordmark" href="#top">
+          <span class="wordmark-dot" aria-hidden="true"></span>
+          <span class="wordmark-text">open <strong>tally</strong> room</span>
+        </a>
+        <nav class="topnav">
+          <a href="#scenario">Scenario</a>
+          <a href="#assembly">Assembly</a>
+          <a href="#council">Council</a>
+          <a href="#flows">Preferences</a>
+          <a href="#about">About</a>
+        </nav>
+      </div>
+      <div class="masthead-rule" aria-hidden="true"></div>
+    </header>
+
+    <main id="top" class="wrap">
+      <section id="hero" class="hero"></section>
+      <section id="scenario" class="block"></section>
+      <section id="assembly" class="block"></section>
+      <section id="council" class="block"></section>
+      <section id="flows" class="block"></section>
+      <section id="about" class="block"></section>
+    </main>
+
+    <footer class="footer">
+      <div class="wrap">
+        <p>
+          <strong>open tally room</strong> — an open-source Australian election
+          simulation engine. This demo is <em>unofficial</em> and
+          <strong>not affiliated with the ABC</strong> or the VEC.
+        </p>
+        <p class="footer-sub" id="footer-meta"></p>
+      </div>
+    </footer>
+
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

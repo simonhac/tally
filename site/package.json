@@ -1,0 +1,21 @@
+{
+  "name": "open-tally-room-site",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "description": "Static demo site for open-tally-room — interactive 2022 Victorian election projection.",
+  "scripts": {
+    "dev": "vite",
+    "web": "tsx start-web.ts",
+    "typecheck": "tsc --noEmit",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "smoke": "tsx smoke-test.ts"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "tsx": "^4.22.4",
+    "typescript": "^5",
+    "vite": "^5.4.0"
+  }
+}
