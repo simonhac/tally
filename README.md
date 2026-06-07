@@ -22,6 +22,25 @@ dependencies — it runs in the browser (including Web Workers), Node, Deno or B
 > Status: extracted from the *Another Brick in the Wall* project; consumed there
 > via the `@tally` path alias. Intended to graduate to its own published package.
 
+## Demo site
+
+A static, interactive demo lives in [`site/`](./site) and deploys to GitHub
+Pages at **https://boost-suite.github.io/tally/**. It runs this engine live in
+the browser over the bundled 2022 Victorian dataset — swing the primaries and
+watch the seats re-count, with an optional Monte Carlo uncertainty band.
+
+Two executable helpers (tsx shebangs — runnable directly from the repo root):
+
+```bash
+cd site && npm install        # first time only
+
+./site/start-web.ts           # serve the site locally (Vite dev server) → http://localhost:5173
+./site/smoke-test.ts          # headless: print the baseline, a scenario, and the Monte Carlo summary
+```
+
+Equivalent npm scripts (`npm run web` / `npm run smoke`) and full build/deploy
+instructions are in [`site/README.md`](./site/README.md).
+
 ## Install / consume
 
 Today it's consumed as source via a tsconfig path alias:
