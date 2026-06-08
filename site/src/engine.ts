@@ -5,11 +5,15 @@
 import {
   aggregateLaPrimaries,
   aggregateLcPrimaries,
+  computeDemoStats,
+  rakeLaOnpDemographic,
+  resolveOnpDemographic,
   resolveParty,
   runAllLaIrv,
   runAllLcStv,
   tallyLcSeats,
   tallySeats,
+  type Demographic,
   type PartyId,
   type ResolvedParty,
   type ScenarioState,
@@ -42,10 +46,64 @@ export const FOLD_SPEC = {
   prefix: [["ind_", "ind"]] as Array<[string, string]>,
 };
 
+// Formal-vote weight per demographic — fixed by the dataset, so compute once.
+export const DEMO_STATS = computeDemoStats(DATA.la.seats);
+
+// Resolved One Nation demographic model for a scenario. `resolvedOnpDemo` is
+// the four displayed per-region shares; `*ForModel`/`laRakedPrimaries` are the
+// arguments threaded into the LA projection (undefined when ONP is untouched,
+// so the baseline path is unchanged). Raking holds every other party's
+// statewide total flat while reshaping ONP by region; when the pins are too
+// extreme to reconcile (`rakeFeasible === false`) we drop the raked primaries
+// and fall back to per-seat redistribution.
+export interface OnpModel {
+  statewideOnpPct: number;
+  resolvedOnpDemo: Record<Demographic, number>;
+  resolvedOnpDemoForModel?: Record<Demographic, number>;
+  laRakedPrimaries?: Map<string, Record<PartyId, number>>;
+  rakeFeasible: boolean;
+}
+
+export function resolveOnpModel(scenario: ScenarioState): OnpModel {
+  const agg = aggregateLaPrimaries(DATA.la.seats, scenario, {
+    bucketIndies: false,
+  });
+  const total = Object.values(agg).reduce((a, b) => a + b, 0);
+  const statewideOnpPct = total > 0 ? ((agg.onp ?? 0) / total) * 100 : 0;
+  const resolvedOnpDemo = resolveOnpDemographic(
+    statewideOnpPct,
+    scenario.onpDemographic,
+    DEMO_STATS,
+  );
+  const onpEngaged =
+    "onp" in scenario.manualSwings ||
+    Object.keys(scenario.onpDemographic).length > 0;
+  const resolvedOnpDemoForModel = onpEngaged ? resolvedOnpDemo : undefined;
+  const laRake = resolvedOnpDemoForModel
+    ? rakeLaOnpDemographic(DATA.la.seats, scenario, resolvedOnpDemoForModel)
+    : null;
+  const laRakedPrimaries = laRake?.feasible ? laRake.primaries : undefined;
+  return {
+    statewideOnpPct,
+    resolvedOnpDemo,
+    resolvedOnpDemoForModel,
+    laRakedPrimaries,
+    rakeFeasible: laRake ? laRake.feasible : true,
+  };
+}
+
 // Deterministic seat projections under a scenario, folded to Victorian rows.
 export function projectLa(scenario: ScenarioState): Tally {
+  const { resolvedOnpDemoForModel, laRakedPrimaries } =
+    resolveOnpModel(scenario);
   return tallySeats(
-    runAllLaIrv(DATA.la.seats, DATA.preferenceFlows, scenario),
+    runAllLaIrv(
+      DATA.la.seats,
+      DATA.preferenceFlows,
+      scenario,
+      resolvedOnpDemoForModel,
+      laRakedPrimaries,
+    ),
     vicFold,
   );
 }
@@ -54,8 +112,15 @@ export function projectLc(scenario: ScenarioState): Tally {
 }
 
 // Statewide primary aggregates (lib+nat folded into a single Coalition row).
+// The ONP demographic model reshapes ONP across regions, so feed it through
+// here too — otherwise the votes chart and the seat projection would disagree.
 export function laVotes(scenario?: ScenarioState): Tally {
-  return aggregateLaPrimaries(DATA.la.seats, scenario, { groupCoalition: true });
+  const model = scenario ? resolveOnpModel(scenario) : undefined;
+  return aggregateLaPrimaries(DATA.la.seats, scenario, {
+    groupCoalition: true,
+    resolvedOnpDemo: model?.resolvedOnpDemoForModel,
+    rakedPrimaries: model?.laRakedPrimaries,
+  });
 }
 export function lcVotes(scenario?: ScenarioState): Tally {
   return aggregateLcPrimaries(DATA.lc.regions, scenario, {

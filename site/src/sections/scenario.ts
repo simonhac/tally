@@ -20,10 +20,13 @@ import {
   party,
   projectLa,
   projectLc,
+  resolveOnpModel,
   sumTally,
 } from "../engine";
 import { createMonteCarlo, MOE_PP, type McStats } from "../mc";
+import { PRESETS } from "../presets";
 import { store } from "../state";
+import { createOnpDemoPanel } from "./onpDemo";
 
 // Independents are carried per-seat in the dataset, so dialling them up flips
 // the seats where they actually stand: teal (urban) in Hawthorn/Kew/Mornington,
@@ -31,8 +34,8 @@ import { store } from "../state";
 const SLIDER_PARTIES = ["alp", "lib", "grn", "onp", "ind_teal", "ind_country"];
 const DISPLAY_LA = ["alp", "coa", "grn", "onp", "ind", "oth"];
 const DISPLAY_LC = ["alp", "coa", "grn", "onp", "lcn", "ajp", "dlp", "oth"];
-const SWING_MIN = -15;
-const SWING_MAX = 15;
+const SWING_MIN = -35;
+const SWING_MAX = 35;
 
 const BASE = emptyScenario();
 const BASE_SEATS_LA = foldCoalition(projectLa(BASE));
@@ -114,6 +117,29 @@ export function renderScenario(root: HTMLElement) {
     "Reset",
   );
 
+  // One-click polling-scenario presets (e.g. Roy Morgan). Loading one pins the
+  // poll's per-party swings and ONP regional shape; editing any slider after
+  // detaches the scenario back to "custom".
+  const presetRow = h(
+    "div.preset-row",
+    {},
+    h("span.preset-label", {}, "Load a poll:"),
+    ...PRESETS.map((p) =>
+      h(
+        "button.btn-preset",
+        {
+          type: "button",
+          title: p.description ?? "",
+          onClick: () => store.loadPreset(p),
+        },
+        p.label,
+      ),
+    ),
+  );
+
+  // One Nation by region — sliders that reshape ONP's per-demographic share.
+  const onpDemo = createOnpDemoPanel();
+
   // Model-uncertainty toggle, controls (cores · MoE · Run), and readout.
   const toggle = h("input", {
     type: "checkbox",
@@ -163,7 +189,9 @@ export function renderScenario(root: HTMLElement) {
         "div.panel.swing-panel",
         {},
         h("div.panel-head", {}, h("h3", {}, "Primary swings"), resetBtn),
+        presetRow,
         ...sliders,
+        onpDemo.el,
         h(
           "label.unc-row",
           { for: "unc-toggle" },
@@ -272,6 +300,7 @@ export function renderScenario(root: HTMLElement) {
 
   function update() {
     const s = store.scenario;
+    const onpModel = resolveOnpModel(s);
 
     // Deterministic projections for all four cards.
     lastSeatsLa = seatVals(DISPLAY_LA, foldCoalition(projectLa(s)), BASE_SEATS_LA);
@@ -293,6 +322,9 @@ export function renderScenario(root: HTMLElement) {
       row.classList.toggle("auto", !manual);
     }
     resetBtn.style.visibility = store.isDirty() ? "visible" : "hidden";
+
+    // One Nation by region.
+    onpDemo.update(onpModel);
 
     // Model-uncertainty controls. Toggling on (or changing the scenario while
     // on) invalidates any prior run; the user presses Run to (re)sample.

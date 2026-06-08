@@ -74,8 +74,8 @@ export const SEATS_URL_DEFAULTS: SeatsUrlState = {
   onpDemographic: {},
 };
 
-const SWING_MIN = -30;
-const SWING_MAX = 30;
+const SWING_MIN = -35;
+const SWING_MAX = 35;
 
 const VIEW_VALUES: ReadonlySet<SeatsView> = new Set(["all", "changing", "none"]);
 const BUILTIN_MODES: ReadonlySet<PresetMode> = new Set(["vic2022", "custom"]);
