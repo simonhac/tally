@@ -302,6 +302,53 @@ a {
   border-color: var(--accent);
 }
 
+/* Preset buttons (e.g. Roy Morgan) above the swing sliders. */
+.preset-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+.preset-label {
+  font-size: 13px;
+  color: var(--muted);
+}
+.btn-preset {
+  border: 1px solid var(--line-strong);
+  background: #fff;
+  border-radius: 6px;
+  padding: 4px 12px;
+  font-size: 13px;
+  cursor: pointer;
+  color: var(--ink);
+}
+.btn-preset:hover {
+  border-color: var(--accent);
+  background: #fff8e6;
+}
+
+/* One Nation by region — sits below the swing sliders, reuses .swing-row. */
+.onp-demo-panel {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+}
+.onp-demo-sub {
+  margin: 0 0 6px;
+  font-size: 12px;
+  color: var(--muted);
+}
+.onp-demo-warning {
+  margin: 8px 0 0;
+  padding: 8px 10px;
+  font-size: 12px;
+  color: #8a3a00;
+  background: #fff3e0;
+  border: 1px solid #f0c089;
+  border-radius: 6px;
+}
+
 .swing-row {
   display: grid;
   grid-template-columns: 14px 78px 1fr 46px;
