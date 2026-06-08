@@ -239,6 +239,11 @@ a {
 }
 
 /* ---------------- scenario ---------------- */
+/* Scenario dashboard breaks out of the 1080px .wrap cap and fills the window. */
+#scenario {
+  margin-inline: calc(50% - 50vw);
+  padding-inline: 20px;
+}
 .scenario-grid {
   display: grid;
   grid-template-columns: 340px 1fr;
