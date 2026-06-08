@@ -212,7 +212,7 @@ export function renderScenario(root: HTMLElement) {
             "span.unc-text",
             {},
             h("strong", {}, "Model uncertainty"),
-            h("span.unc-help", {}, "Monte Carlo · 5-second run"),
+            h("span.unc-help", {}, `Monte Carlo · MoE ±${MOE_PP.toFixed(1)} pts`),
           ),
         ),
         uncControls,
@@ -262,10 +262,16 @@ export function renderScenario(root: HTMLElement) {
     },
   });
 
-  // Surface the pool size + simulated poll margin of error.
-  uncMeta.textContent = mc.available
-    ? `${mc.cores} ${mc.cores === 1 ? "processor core" : "processor cores"} · MoE ±${MOE_PP.toFixed(1)} pts`
-    : "Monte Carlo unavailable in this browser";
+  // Surface the run length above the processor-pool size (on two lines).
+  if (mc.available) {
+    uncMeta.append(
+      "5-second run",
+      h("br"),
+      `${mc.cores} ${mc.cores === 1 ? "processor core" : "processor cores"}`,
+    );
+  } else {
+    uncMeta.textContent = "Monte Carlo unavailable in this browser";
+  }
 
   function applyWhiskers() {
     seatsLa.update(withWhiskers(lastSeatsLa, laWhiskers), true);
