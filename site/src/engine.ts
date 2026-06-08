@@ -5,6 +5,7 @@
 import {
   aggregateLaPrimaries,
   aggregateLcPrimaries,
+  applySwing,
   computeDemoStats,
   rakeLaOnpDemographic,
   resolveOnpDemographic,
@@ -65,11 +66,15 @@ export interface OnpModel {
 }
 
 export function resolveOnpModel(scenario: ScenarioState): OnpModel {
-  const agg = aggregateLaPrimaries(DATA.la.seats, scenario, {
-    bucketIndies: false,
-  });
-  const total = Object.values(agg).reduce((a, b) => a + b, 0);
-  const statewideOnpPct = total > 0 ? ((agg.onp ?? 0) / total) * 100 : 0;
+  // Clean statewide ONP target: dialled swings applied ONCE to the aggregated
+  // 2022 primaries (no per-seat clamp/renormalise) — the same column target
+  // raking uses, so the widget, the votes chart and the raked seat tally agree.
+  // Summing per-seat applySwingForSeat instead drifts off this whenever a large
+  // swing makes seats clamp at 0 and renormalise (see src/raking.ts).
+  const aggBase = aggregateLaPrimaries(DATA.la.seats);
+  const cleanAgg = applySwing(aggBase, scenario.manualSwings);
+  const total = Object.values(cleanAgg).reduce((a, b) => a + b, 0);
+  const statewideOnpPct = total > 0 ? ((cleanAgg.onp ?? 0) / total) * 100 : 0;
   const resolvedOnpDemo = resolveOnpDemographic(
     statewideOnpPct,
     scenario.onpDemographic,
