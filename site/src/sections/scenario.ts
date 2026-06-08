@@ -63,8 +63,8 @@ export function renderScenario(root: HTMLElement) {
     h("div.chart-card", {}, h("h3.chart-title", {}, title), chart);
 
   // Slider rows. Each slider is either "locked" (the user has pinned a manual
-  // swing) or "auto" (a free absorber that takes up the slack). Double-click a
-  // locked slider to release it back to auto.
+  // swing) or "auto" (a free absorber that takes up the slack). Click a locked
+  // slider's thumb to release it back to auto.
   const sliderRows = new Map<
     string,
     { row: HTMLElement; input: HTMLInputElement; num: HTMLElement }
@@ -80,18 +80,29 @@ export function renderScenario(root: HTMLElement) {
       title: "Drag to set · click the thumb to lock/unlock",
       "aria-label": `${p.name} primary swing (percentage points)`,
     }) as HTMLInputElement;
-    // Track whether a press moved the value, so a click that didn't drag (i.e.
-    // a click on the thumb) can toggle the lock instead of setting a value.
-    let moved = false;
-    input.addEventListener("pointerdown", () => {
-      moved = false;
+    // Distinguish a click (toggle lock) from a drag (set value) by pointer
+    // travel, not by whether `input` fired — a click on the thumb can snap the
+    // value a hair and fire `input`, which must not swallow the toggle.
+    let pressX: number | null = null; // clientX at pointerdown; null for keyboard
+    let dragged = false;
+    input.addEventListener("pointerdown", (e) => {
+      pressX = e.clientX;
+      dragged = false;
+    });
+    input.addEventListener("pointermove", (e) => {
+      if (pressX !== null && Math.abs(e.clientX - pressX) > 3) dragged = true;
     });
     input.addEventListener("input", () => {
-      moved = true;
-      store.dispatch({ type: "set-swing", party: id, value: Number(input.value) });
+      // Keyboard arrows (no active press) always set; a pointer only sets once
+      // it has travelled far enough to count as a drag.
+      if (pressX === null || dragged) {
+        store.dispatch({ type: "set-swing", party: id, value: Number(input.value) });
+      }
     });
     input.addEventListener("click", () => {
-      if (moved) return;
+      const wasDrag = dragged;
+      pressX = null;
+      if (wasDrag) return;
       if (id in store.scenario.manualSwings) {
         store.dispatch({ type: "release-swing", party: id });
       } else {
@@ -201,7 +212,7 @@ export function renderScenario(root: HTMLElement) {
             "span.unc-text",
             {},
             h("strong", {}, "Model uncertainty"),
-            h("span.unc-help", {}, "Monte Carlo · 5-second run"),
+            h("span.unc-help", {}, `Monte Carlo · MoE ±${MOE_PP.toFixed(1)} pts`),
           ),
         ),
         uncControls,
@@ -251,10 +262,16 @@ export function renderScenario(root: HTMLElement) {
     },
   });
 
-  // Surface the pool size + simulated poll margin of error.
-  uncMeta.textContent = mc.available
-    ? `${mc.cores} ${mc.cores === 1 ? "processor core" : "processor cores"} · MoE ±${MOE_PP.toFixed(1)} pts`
-    : "Monte Carlo unavailable in this browser";
+  // Surface the run length above the processor-pool size (on two lines).
+  if (mc.available) {
+    uncMeta.append(
+      "5-second run",
+      h("br"),
+      `${mc.cores} ${mc.cores === 1 ? "processor core" : "processor cores"}`,
+    );
+  } else {
+    uncMeta.textContent = "Monte Carlo unavailable in this browser";
+  }
 
   function applyWhiskers() {
     seatsLa.update(withWhiskers(lastSeatsLa, laWhiskers), true);

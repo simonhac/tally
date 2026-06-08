@@ -35,16 +35,35 @@ export function createOnpDemoPanel(): OnpDemoPanel {
       max: String(ONP_DEMO_MAX),
       step: "0.1",
       value: "0",
-      title: "Drag to pin · double-click to release back to automatic",
+      title: "Drag to pin · click the thumb to release back to automatic",
       "aria-label": `${abbrev(d)} One Nation primary share (percent)`,
     }) as HTMLInputElement;
-    input.addEventListener("input", () => {
-      store.dispatch({ type: "set-onp-demo", demographic: d, value: Number(input.value) });
+    // Distinguish a click (toggle pin) from a drag (set value) by pointer
+    // travel — a click on the thumb can snap the value a hair and fire `input`,
+    // which must not swallow the toggle.
+    let pressX: number | null = null; // clientX at pointerdown; null for keyboard
+    let dragged = false;
+    input.addEventListener("pointerdown", (e) => {
+      pressX = e.clientX;
+      dragged = false;
     });
-    // Double-click a pinned region to release it back to automatic.
-    input.addEventListener("dblclick", () => {
+    input.addEventListener("pointermove", (e) => {
+      if (pressX !== null && Math.abs(e.clientX - pressX) > 3) dragged = true;
+    });
+    input.addEventListener("input", () => {
+      if (pressX === null || dragged) {
+        store.dispatch({ type: "set-onp-demo", demographic: d, value: Number(input.value) });
+      }
+    });
+    // Click a pinned region's thumb to release it back to automatic.
+    input.addEventListener("click", () => {
+      const wasDrag = dragged;
+      pressX = null;
+      if (wasDrag) return;
       if (d in store.scenario.onpDemographic) {
         store.dispatch({ type: "release-onp-demo", demographic: d });
+      } else {
+        store.dispatch({ type: "set-onp-demo", demographic: d, value: Number(input.value) });
       }
     });
     const num = h("span.swing-num", {}, "0.0%");
